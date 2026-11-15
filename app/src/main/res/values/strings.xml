@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">My Food Delivery</string>
+    <string name="kitchen_name">Saffron &amp; Ember Kitchen</string>
+    <string name="kitchen_tagline">Authentic Indian &amp; Fusion • Freshly Prepared</string>
+    <string name="delivery_eta_badge">25–30 mins</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_menu">Menu</string>
+    <string name="nav_cart">Cart</string>
+    <string name="nav_orders">Orders</string>
+    <string name="search_hint">Search biryani, dosa, pizza, thali…</string>
+    <string name="veg_only">Veg Only</string>
+    <string name="categories_title">Explore Categories</string>
+    <string name="see_all">See All</string>
+    <string name="bestsellers_title">Kitchen Bestsellers</string>
+    <string name="popular_title">Popular Right Now</string>
+    <string name="add_to_cart">ADD</string>
+    <string name="empty_cart_title">Your plate is empty</string>
+    <string name="empty_cart_subtitle">Add hot biryani, crispy dosa, or a royal thali from our kitchen to get started.</string>
+    <string name="browse_menu">Browse Menu</string>
+    <string name="proceed_checkout">Proceed to Checkout</string>
+    <string name="checkout_title">Checkout</string>
+    <string name="place_order">Place Order</string>
+    <string name="order_confirmed_title">Order Confirmed!</string>
+    <string name="order_confirmed_subtitle">Our chefs have fired up the tandoor for your meal.</string>
+    <string name="track_my_orders">Track in My Orders</string>
+    <string name="back_to_home">Back to Home</string>
+    <string name="my_orders_title">My Orders</string>
+    <string name="empty_orders_title">No orders yet</string>
+    <string name="empty_orders_subtitle">Your delicious meals and live delivery updates will appear here.</string>
+    <string name="reorder">Reorder</string>
+    <string name="error_invalid_address">Please enter your full delivery address and 10-digit phone number.</string>
+    <string name="admin_orders_title">Admin Dashboard</string>
+    <string name="admin_orders_subtitle">Restaurant Console • Cloud Firestore Sync</string>
+    <string name="kitchen_admin_button">Admin Panel</string>
+</resources>

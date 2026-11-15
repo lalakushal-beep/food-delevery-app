@@ -1,0 +1,76 @@
+{
+  "project_info": {
+    "project_number": "70250801178",
+    "project_id": "my-food-delivery-5e6bd",
+    "storage_bucket": "my-food-delivery-5e6bd.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:70250801178:android:748500ff4b2e4fa48a89a3",
+        "android_client_info": {
+          "package_name": "com.aistudio.myfooddelevery.rkvmtp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "70250801178-88gqp4ccog35flgo5nkaq1u1p2hs19q6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aistudio.myfooddelevery.rkvmtp",
+            "certificate_hash": "48b166ebfddb52a93f9d985b55c645d0e736ddc0"
+          }
+        },
+        {
+          "client_id": "70250801178-jicbtrsdr5k8nflt8u4b60rmmino83j9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTGiWRj50KavpBWIcFNr5aMZBMG8bkQb0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "70250801178-jicbtrsdr5k8nflt8u4b60rmmino83j9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:70250801178:android:f8a7f5d9cdedc7a38a89a3",
+        "android_client_info": {
+          "package_name": "com.aistudio.myfooddelivery.rkvmtp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "70250801178-jicbtrsdr5k8nflt8u4b60rmmino83j9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTGiWRj50KavpBWIcFNr5aMZBMG8bkQb0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "70250801178-jicbtrsdr5k8nflt8u4b60rmmino83j9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
