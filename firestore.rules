@@ -1,0 +1,147 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global default-deny safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isBootstrappedAdmin() {
+      return isSignedIn() &&
+        ('email_verified' in request.auth.token) &&
+        ('email' in request.auth.token) &&
+        request.auth.token.email_verified == true &&
+        request.auth.token.email == 'lala.kushal@gmail.com';
+    }
+
+    function isAdmin() {
+      return isBootstrappedAdmin() ||
+        (isSignedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid)));
+    }
+
+    function isValidOrderStatus(status) {
+      return status in [
+        'PENDING',
+        'ACCEPTED',
+        'PREPARING',
+        'READY',
+        'OUT_FOR_DELIVERY',
+        'DELIVERED',
+        'REJECTED'
+      ];
+    }
+
+    function isValidOrder(data) {
+      return data.userId is string && isValidId(data.userId) &&
+        (!('userEmail' in data) || (data.userEmail is string && data.userEmail.size() <= 254)) &&
+        data.placedAtMillis is int && data.placedAtMillis > 0 &&
+        data.formattedDate is string && data.formattedDate.size() >= 1 && data.formattedDate.size() <= 60 &&
+        isValidOrderStatus(data.status) &&
+        data.items is list && data.items.size() >= 1 && data.items.size() <= 50 && data.items[0] is map &&
+        data.totalInr is int && data.totalInr >= 1 && data.totalInr <= 1000000 &&
+        data.discountInr is int && data.discountInr >= 0 && data.discountInr <= 1000000 &&
+        data.deliveryAddress is string && data.deliveryAddress.size() >= 5 && data.deliveryAddress.size() <= 500 &&
+        data.recipientName is string && data.recipientName.size() >= 2 && data.recipientName.size() <= 100 &&
+        data.phoneNumber is string && data.phoneNumber.matches('^[0-9]{10}$') &&
+        data.deliveryInstruction is string && data.deliveryInstruction.size() <= 200 &&
+        data.kitchenNote is string && data.kitchenNote.size() <= 300 &&
+        data.paymentMethod in ['CASH_ON_DELIVERY', 'UPI_AT_DOORSTEP'] &&
+        data.estimatedMinutes is int && data.estimatedMinutes >= 1 && data.estimatedMinutes <= 300 &&
+        data.createdAt is timestamp && data.createdAt <= request.time &&
+        data.updatedAt is timestamp && data.updatedAt <= request.time;
+    }
+
+    match /admins/{adminUid} {
+      allow get: if isSignedIn() && isValidId(adminUid) && request.auth.uid == adminUid;
+      allow list, create, update, delete: if false;
+    }
+
+    match /orders/{orderId} {
+      allow get: if isSignedIn() &&
+        isValidId(orderId) &&
+        (resource.data.userId == request.auth.uid || isAdmin());
+
+      // No get()/exists() in allow list to avoid O(n) lookup costs; uses verified token email or ownership
+      allow list: if isSignedIn() &&
+        (resource.data.userId == request.auth.uid || isBootstrappedAdmin());
+
+      allow create: if isSignedIn() &&
+        isValidId(orderId) &&
+        incoming().userId == request.auth.uid &&
+        incoming().status == 'PENDING' &&
+        incoming().keys().hasAll([
+          'userId',
+          'placedAtMillis',
+          'formattedDate',
+          'status',
+          'items',
+          'totalInr',
+          'discountInr',
+          'deliveryAddress',
+          'recipientName',
+          'phoneNumber',
+          'deliveryInstruction',
+          'kitchenNote',
+          'paymentMethod',
+          'estimatedMinutes',
+          'createdAt',
+          'updatedAt'
+        ]) &&
+        incoming().keys().hasOnly([
+          'userId',
+          'userEmail',
+          'placedAtMillis',
+          'formattedDate',
+          'status',
+          'items',
+          'totalInr',
+          'discountInr',
+          'deliveryAddress',
+          'recipientName',
+          'phoneNumber',
+          'deliveryInstruction',
+          'kitchenNote',
+          'paymentMethod',
+          'estimatedMinutes',
+          'createdAt',
+          'updatedAt'
+        ]) &&
+        isValidOrder(incoming());
+
+      allow update: if isSignedIn() &&
+        isValidId(orderId) &&
+        isValidOrder(incoming()) &&
+        incoming().userId == existing().userId &&
+        incoming().placedAtMillis == existing().placedAtMillis &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().totalInr == existing().totalInr &&
+        incoming().items == existing().items &&
+        incoming().diff(existing()).affectedKeys().hasOnly(['status', 'updatedAt']) &&
+        (
+          isAdmin() ||
+          (
+            existing().userId == request.auth.uid &&
+            !(existing().status in ['DELIVERED', 'REJECTED'])
+          )
+        );
+
+      allow delete: if false;
+    }
+  }
+}

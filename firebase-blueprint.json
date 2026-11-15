@@ -1,0 +1,98 @@
+{
+  "entities": {
+    "OrderLineItem": {
+      "title": "OrderLineItem",
+      "description": "A single dish line item within a customer food order.",
+      "type": "object",
+      "properties": {
+        "menuItemId": { "type": "string", "description": "Catalog dish ID" },
+        "name": { "type": "string", "description": "Dish display name" },
+        "quantity": { "type": "integer", "description": "Ordered item quantity" },
+        "unitPriceInr": { "type": "integer", "description": "Unit price in INR" },
+        "isVeg": { "type": "boolean", "description": "Vegetarian indicator" },
+        "customization": { "type": "string", "description": "Selected dish customization" }
+      },
+      "required": ["menuItemId", "name", "quantity", "unitPriceInr", "isVeg", "customization"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Customer food delivery order synced between the Customer App and Restaurant Admin Panel.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Authenticated Firebase Auth UID of the customer" },
+        "userEmail": { "type": "string", "description": "Authenticated customer email address" },
+        "placedAtMillis": { "type": "integer", "description": "Epoch timestamp in milliseconds when placed" },
+        "formattedDate": { "type": "string", "description": "Human-readable order date/time" },
+        "status": {
+          "type": "string",
+          "enum": ["PENDING", "ACCEPTED", "PREPARING", "READY", "OUT_FOR_DELIVERY", "DELIVERED", "REJECTED"],
+          "description": "Current lifecycle status of the order"
+        },
+        "items": {
+          "type": "array",
+          "description": "Bounded list of ordered dish items (1 to 50 items)"
+        },
+        "totalInr": { "type": "integer", "description": "Grand total payable in INR" },
+        "discountInr": { "type": "integer", "description": "Applied coupon discount in INR" },
+        "deliveryAddress": { "type": "string", "description": "Complete delivery address including landmark" },
+        "recipientName": { "type": "string", "description": "Customer full name" },
+        "phoneNumber": { "type": "string", "description": "10-digit Indian mobile number" },
+        "deliveryInstruction": { "type": "string", "description": "Rider delivery instruction" },
+        "kitchenNote": { "type": "string", "description": "Optional cooking note for the kitchen" },
+        "paymentMethod": {
+          "type": "string",
+          "enum": ["CASH_ON_DELIVERY", "UPI_AT_DOORSTEP"],
+          "description": "Selected payment mode"
+        },
+        "estimatedMinutes": { "type": "integer", "description": "Estimated preparation and delivery minutes" },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp set via FieldValue.serverTimestamp() on creation"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp updated via FieldValue.serverTimestamp() on mutation"
+        }
+      },
+      "required": [
+        "userId",
+        "placedAtMillis",
+        "formattedDate",
+        "status",
+        "items",
+        "totalInr",
+        "discountInr",
+        "deliveryAddress",
+        "recipientName",
+        "phoneNumber",
+        "deliveryInstruction",
+        "kitchenNote",
+        "paymentMethod",
+        "estimatedMinutes",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "AdminMarker": {
+      "title": "AdminMarker",
+      "description": "Read-only server-provisioned restaurant admin marker keyed by Firebase Auth UID.",
+      "type": "object",
+      "properties": {
+        "role": { "type": "string", "description": "Admin role label" }
+      },
+      "required": ["role"]
+    }
+  },
+  "firestore": {
+    "/orders/{orderId}": {
+      "schema": { "$ref": "#/entities/Order" },
+      "description": "Root collection of customer food orders accessed by the owning customer and restaurant admins."
+    },
+    "/admins/{adminUid}": {
+      "schema": { "$ref": "#/entities/AdminMarker" },
+      "description": "Server-managed restaurant administrator allowlist keyed by UID."
+    }
+  }
+}

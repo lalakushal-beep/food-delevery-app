@@ -1,0 +1,6 @@
+{
+  "name": "My Food Delivery",
+  "description": "Single-restaurant Indian and fusion food delivery app featuring curated categories, INR menu, cart, checkout, and order tracking.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
